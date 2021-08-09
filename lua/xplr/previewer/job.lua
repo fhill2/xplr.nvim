@@ -1,19 +1,19 @@
 -- starts async job to read xplr pipe and sends data to previewer 
-local Job = require('plenary.job')
+local plenary_job = require('plenary.job')
+local log = require'log1'
 
-local Previewer = {}
+local Job = {}
+Job.__index = Job
 
 -- simplified telescope/finders
-function Previewer:new(opts)
+function Job:new(opts)
   opts = opts or {}
 
-  return setmetatable({
-  fifo_path = opts.fifo_path
-  }, self)
+  return setmetatable({}, Job)
 end
 
 
-function Previewer:start(opts)
+function Job:start(opts)
 
 
 
@@ -21,16 +21,17 @@ function Previewer:start(opts)
     if not line or line == "" then
       return
     end
+    log.info(line)
     process_result(line)
   end
 
 
 
 
-self.job = Job:new {
+self.job = plenary_job:new {
     command = opts.command,
     args = opts.args,
-    cwd = opts.fifo_path,
+    cwd = opts.cwd,
     enable_recording = false,
 
     on_stdout = on_output,
@@ -47,4 +48,4 @@ end
 
 
 
-return Previewer
+return Job
