@@ -1,16 +1,156 @@
-current file
-:Xplr %:p
+
+simply opens xplr in a floating window and provides extra features:
+1 preview hovered file in preview window (using Telescope previewer)
+
+2 open selection in nvim
+
+3 a simple API that wraps nvim lua msgpack client customized for xplr. This is so you can call nvim API functions or your own lua functions from xplr. 
 
 
-TODO:
-UI with standard windows instead of floating (nui/split/init.lua)
-Option to register autocmd to close xplr when leaving xplr buf
-file extension dependent preview switching
+
+### Installation
+1 Install this plugin
+Using [packer.nvim](https://github.com/wbthomason/packer.nvim)
+```lua
+use {
+  'nvim-telescope/telescope.nvim',
+  requires = {{'nvim-lua/plenary.nvim'}, {'MunifTanjim/nui.nvim'}}
+}
+```
+Using [vim-plug](https://github.com/junegunn/vim-plug)
+```lua
+Plug 'nvim-lua/plenary.nvim'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+```
+
+You can then `call xplr#health#check()` to show info about installation.
+
+2 Install these for optional features
+previewed hovered file - requires: [nvim.xplr](https://github.com/fhill2/nvim.xplr) [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
+
+open selection in nvim - requires: [nvim.xplr](https://github.com/fhill2/nvim.xplr)
+
 
 
 ### Configuration
+```lua
+require("xplr").setup({
+  xplr = {
+    ui = {
+      border = {
+        style = "single",
+        highlight = "FloatBorder",
+      },
+      position = "30%",
+
+      size = {
+        width = "40%",
+        height = "60%",
+      },
+    },
+  },
+  previewer = {
+    split = true,
+    split_percent = 0.5,
+    ui = {
+      border = {
+        style = "single",
+        highlight = "FloatBorder",
+      },
+      position = { row = "1%", col = "99%" },
+      relative = "editor", -- editor only supported for now
+      size = {
+        width = "30%",
+        height = "99%",
+      },
+    },
+  },
+})
+
+local opts = { noremap = true, silent = true }
+local nvim_set_keymap = vim.api.nvim_set_keymap
+local mappings = require("xplr.mappings")
+local set_keymap = mappings.set_keymap
+local on_previewer_set_keymap = mappings.on_previewer_set_keymap
 
 
-4 for optional telescope driven preview, install nvim.xplr 
 
-start/stop previewer is configured xplr side
+nvim_set_keymap("n", "<space>xx", '<Cmd>lua require"xplr".open()<CR>', opts) -- open/focus cycle
+set_keymap("t", "<space>xx", '<Cmd>lua require"xplr".focus()<CR>', opts) -- open/focus cycle
+
+nvim_set_keymap("n", "<space>xc", '<Cmd>lua require"xplr".close()<CR>', opts)
+set_keymap("t", "<space>xc", '<Cmd>lua require"xplr".close()<CR>', opts)
+
+nvim_set_keymap("n", "<space>xv", '<Cmd>lua require"xplr".toggle()<CR>', opts)
+set_keymap("t", "<space>xv", '<Cmd>lua require"xplr".toggle()<CR>', opts)
+
+on_previewer_set_keymap("t", "<space>xb", '<Cmd>lua require"xplr.actions".scroll_previewer_up()<CR>', opts)
+on_previewer_set_keymap("t", "<space>xn", '<Cmd>lua require"xplr.actions".scroll_previewer_down()<CR>', opts)
+```
+
+
+## UI Config
+`xplr.ui` `previewer.ui`- [nui.nvim](https://github.com/MunifTanjim/nui.nvim) configuration for xplr and previewer window
+
+`previewer.split`
+`true` splits xplr win when previewer win opens (currently Horizontal only supported)
+`false` uses `previewer.ui` config for previewer win when it opens
+ 
+
+## Keymap Config
+`set_keymap()` keymaps loaded on xplr window when xplr window opens
+`on_previewer_set_keymap()` keymaps loaded on xplr window when preview window opens
+
+previewer and open selection keymap is configured in [nvim.xplr](https://github.com/fhill2/nvim.xplr)
+
+default mappings above conflict with default xplr mapping to select files (space).
+You can unset and use `v` default xplr keymap for selection instead:
+
+```lua
+-- ~/.config/xplr/init.lua
+xplr.config.modes.builtin.default.key_bindings.on_key.space = {}
+```
+
+
+
+### Usage
+
+Git project root
+
+```
+command XplrProjectRoot :Xplr `git rev-parse --show-toplevel`
+
+:XplrProjectRoot
+```
+
+Current file
+
+```
+:Xplr %:p
+```
+
+Current working directory
+
+```
+:Xplr
+```
+
+Root
+```
+:Xplr /
+```
+
+## TODO
+UI with standard windows instead of floating (nui/split/init.lua)
+Option to register autocmd to close xplr when leaving xplr buf
+file extension dependent preview switching
+improve floating window UI - vertical layout
+send to qflist 
+
+
+
+
+
+
+

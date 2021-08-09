@@ -5,6 +5,11 @@ local manager = require'xplr.manager'
 local xplr = manager.state
 local config = require'xplr.config'
 
+function actions.hello_world(data)
+print(vim.inspect(data))
+end
+
+
 function actions.open_selection(selection)
 
 local filepaths = utils.get_absolute_paths(selection)
