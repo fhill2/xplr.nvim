@@ -1,6 +1,5 @@
 -- starts async job to read xplr pipe and sends data to previewer 
 local plenary_job = require('plenary.job')
-local log = require'log1'
 
 local Job = {}
 Job.__index = Job
@@ -21,7 +20,7 @@ function Job:start(opts)
     if not line or line == "" then
       return
     end
-    log.info(line)
+--    log.info(line)
     process_result(line)
   end
 
@@ -39,6 +38,7 @@ self.job = plenary_job:new {
 
     on_exit = function()
       process_complete()
+ --     log.info('job exited')
     end,
   }
 

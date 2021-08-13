@@ -1,6 +1,5 @@
 local Popup = require("nui.popup")
 local utils = require("xplr.utils")
-local log = require("log1")
 local config = require("xplr.config")
 local Previewer = require("xplr.previewer")
 local nui_utils = require("nui.utils")
@@ -58,8 +57,7 @@ function manager.open(opts)
 
   -- setup keymaps on xplr window
   for _, keymap in ipairs(mappings.xplr) do
-    --log.info(mappings.xplr)
-    vim.api.nvim_buf_set_keymap(xplr.ui.bufnr, keymap[1], keymap[2], keymap[3], keymap[4])
+       vim.api.nvim_buf_set_keymap(xplr.ui.bufnr, keymap[1], keymap[2], keymap[3], keymap[4])
   end
 
   vim.api.nvim_set_current_win(xplr.ui.winid)
@@ -92,7 +90,7 @@ function manager._start_preview(opts)
     xplr.previewer = Previewer:new(opts)
   end
 
-  manager._open_preview_window()
+  --manager._open_preview_window()
   xplr.previewer:start(opts)
 end
 
@@ -103,21 +101,19 @@ function manager._stop_preview(opts)
 end
 
 function manager.toggle_preview_window()
-  --log.info('manager toggle preview window')
 
   if not xplr.previewer then
     return
   end
 
-  if not xplr.previewer.is_open then
-    manager._open_preview_window()
+  if not xplr.previewer.ui.winid then
+    --manager._open_preview_window()
   else
     manager._close_preview_window()
   end
 end
 
 function manager._open_preview_window()
-  --log.info('open preview window called!!')
   -- TODO: change when when nui.nvim has split()
   --
 
@@ -132,10 +128,8 @@ function manager._open_preview_window()
   xplr.previewer.ui:mount()
 
   if config.previewer.split then
-    log.info('split ran!')
     local split_percent = config.previewer.split_percent
 
-    --log.info('previewer mount()')
 
     local x_win = vim.deepcopy(vim.api.nvim_win_get_config(xplr.ui.winid))
     local p_win = vim.deepcopy(x_win)
@@ -198,7 +192,6 @@ function manager._previewer_autocmd(winid)
 end
 
 function manager._close_preview_window()
-  log.info('manager _close_preview_window')
   xplr.previewer.ui:unmount()
 
   if not config.previewer.split and config.previewer.ui then
@@ -209,11 +202,9 @@ function manager._close_preview_window()
       relative = config.xplr.ui.relative
     end
 
-    --log.info(config.xplr.ui.position)
     xplr.ui:set_position(config.xplr.ui.position, relative)
     xplr.ui:set_size(config.xplr.ui.size)
     
-    log.info(config.previewer.ui.position)
     --config.previewer.ui.position = config.previewer.ui.position + 1
     xplr.previewer.ui:set_position(config.previewer.ui.position, relative)
     xplr.previewer.ui:set_size(config.previewer.ui.size)
@@ -228,12 +219,10 @@ function manager.focus()
   local xplr_focused = c_win == xplr.ui.winid or false
 
   if xplr_focused then
-    --log.info('xplr focused')
     if manager.last_editor_winnr then
       vim.api.nvim_set_current_win(manager.last_editor_winnr)
     end
   else
-    --log.info('xplr not focused')
     manager.last_editor_winnr = vim.api.nvim_get_current_win()
     vim.api.nvim_set_current_win(xplr.ui.winid)
     vim.cmd("startinsert")

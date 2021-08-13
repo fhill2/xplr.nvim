@@ -4,7 +4,6 @@ local Popup = require'nui.popup'
 local Job = require'plenary.job'
 local config = require'xplr.config'
 --local job = require'xplr.previewer.job'
-local log = require'log1'
 
 local Previewer = {}
 Previewer.__index = Previewer
@@ -27,19 +26,14 @@ end
 function Previewer:start(opts)
   opts = opts or {}
 
-   log.info('previewer job started')
 
 
-local on_output = vim.schedule_wrap(function(_, line, _)
+local on_output = function(_, line, _)
     if not line or line == "" then return end
-    -- log.info('===== NEW PREVIEW =====')
-    -- log.info('at on_output:', line)
-    -- log.info(line)
     self.file:preview({ path = line }, {
     preview_win = self.ui.winid, prompt_win = self.xplr_winid
     }) 
- end)
- 
+ end
 
 self.job = Job:new({
   command = 'cat',
@@ -58,7 +52,6 @@ end
 -- function Previewer:open_preview_window()
 
 
--- log.info('open preview window called!!')
 -- -- TODO: change when when nui.nvim has split()
 -- --
 
@@ -75,8 +68,6 @@ end
 
 
 -- if not config.previewer.split and config.previewer.ui then
---   log.info('picked this')
---   log.info(config.previewer.ui)
 --   -- still need set position because of terminal nui fix
 -- -- xplr.previewer.ui:set_position({row = config.previewer.ui.position.row, col = config.previewer.ui.position.col }, { type = 'win', winid = xplr.ui.popup_state.parent_winid }
 -- -- )
@@ -84,7 +75,6 @@ end
 -- else
 -- local split_percent = config.previewer.split_percent
 
--- log.info('previewer mount()')
 
 -- local x_win = vim.api.nvim_win_get_config(xplr.ui.winid)
 -- local p_win = vim.deepcopy(x_win)
@@ -115,7 +105,6 @@ end
 -- end
 
 -- if xplr.previewer.ui.bufnr then
---   log.info('PREVIEWER AUTOCMD RAN')
 -- vim.cmd([[autocmd WinClosed <buffer=]] .. xplr.previewer.ui.bufnr .. [[> ++nested ++once :silent lua require('xplr').close()]])
 -- end
 

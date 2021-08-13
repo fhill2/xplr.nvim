@@ -1,4 +1,3 @@
-local log = require'log1'
 
 local Mappings = {
 xplr = {},
@@ -15,17 +14,8 @@ end
 
 
 
---function(self, key, value)
---log.info('mappings __index called:', self, key, value)
---end
-
 
 return Mappings
 
 
-
-
--- Mappings.meta.__index = function(self, key, value)
--- log.info('mappings __index called:', self, key, value)
--- end
 

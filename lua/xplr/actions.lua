@@ -1,5 +1,4 @@
 local actions = {}
-local log = require'log1'
 local utils = require'xplr.utils'
 local manager = require'xplr.manager'
 local xplr = manager.state
@@ -23,7 +22,6 @@ end
 
 -- function actions.toggle_preview(opts)
 -- opts = opts or {}
--- --log.info()
 
 -- if opts.enabled then
 -- -- start fifo listen
@@ -48,7 +46,6 @@ end
 actions.scroll_previewer = function(direction)
   -- local state = require('telescope.state')
   -- --local status = state.get_status(prompt_bufnr)
-  log.info(xplr.previewer)
   local default_speed = vim.api.nvim_win_get_height(xplr.previewer.ui.winid) / 2
   local speed = config.previewer.scroll_speed or default_speed
   xplr.previewer.file:scroll_fn(math.floor(speed * direction))
