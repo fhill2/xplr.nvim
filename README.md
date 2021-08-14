@@ -9,8 +9,6 @@ simply opens xplr in a floating window, providing these features:
 
 - a simple API that wraps nvim lua msgpack client customized for xplr. This is so you can call nvim API functions or your own lua functions from xplr. 
 
-Note: Telescope previewer is broken atm (will be working soon). I'll remove this message once it's fixed.
-
 ## Installation
 #### Install plugin
 Using [packer.nvim](https://github.com/wbthomason/packer.nvim)
