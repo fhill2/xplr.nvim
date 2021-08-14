@@ -23,13 +23,11 @@ end
 
 -- extracts all absolute paths from selection table received from xplr
 function utils.get_absolute_paths(selection)
-
-local filepaths = {}
-for k, v in ipairs(selection) do
-table.insert(filepaths, v.absolute_path)
+  local filepaths = {}
+  for k, v in ipairs(selection) do
+    table.insert(filepaths, v.absolute_path)
+  end
+  return filepaths
 end
-return filepaths
-end
-
 
 return utils

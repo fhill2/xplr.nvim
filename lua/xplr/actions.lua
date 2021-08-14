@@ -1,37 +1,26 @@
 local actions = {}
-local utils = require'xplr.utils'
-local manager = require'xplr.manager'
+local utils = require("xplr.utils")
+local manager = require("xplr.manager")
 local xplr = manager.state
-local config = require'xplr.config'
+local config = require("xplr.config")
 
 function actions.hello_world(data)
-print(vim.inspect(data))
+  print(vim.inspect(data))
 end
-
 
 function actions.open_selection(selection)
+  local filepaths = utils.get_absolute_paths(selection)
 
-local filepaths = utils.get_absolute_paths(selection)
+  vim.tbl_map(function(filepath)
+    vim.api.nvim_win_call(1000, function()
+      vim.cmd(string.format("%s %s", "e", filepath))
+    end)
+  end, filepaths)
 
-vim.tbl_map(function(filepath)
-  vim.api.nvim_win_call(1000, function() 
-  vim.cmd(string.format('%s %s', 'e', filepath))
- end)
-    end, filepaths)
+  -- if config.xplr.close_after_opening_files then
+  -- manager.close()
+  -- end
 end
-
--- function actions.toggle_preview(opts)
--- opts = opts or {}
-
--- if opts.enabled then
--- -- start fifo listen
--- manager.start_preview({ fifo_path = opts.fifo_path })
--- else
--- -- stop fifo listen
--- manager.stop_preview({ fifo_path = opts.fifo_path})
--- end
--- end
-
 
 -- telescope/actions/init.lua
 
@@ -52,12 +41,3 @@ actions.scroll_previewer = function(direction)
 end
 
 return actions
-
-  -- return setmetatable({
-  -- ui = Popup(config.previewer.ui or config.xplr.ui),
-  -- job = finders.new_oneshot_job({'cat', opts.fifo_path}, {
-      
-  --     })
-  -- file = previewers.vim_buffer_cat.new({})
-  -- }, Previewer)
-

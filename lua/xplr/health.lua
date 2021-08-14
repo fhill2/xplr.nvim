@@ -15,7 +15,6 @@ local hererocks_url_wget = "https://raw.githubusercontent.com/luarocks/hererocks
 local nvim_client_url_luarocks = "https://luarocks.org/modules/justinmk/nvim-client"
 local nvim_client_url_github = "https://github.com/neovim/lua-client"
 
-
 local optional_dependencies = {
   {
     name = "luarocks",
@@ -93,7 +92,7 @@ local function check_luarocks_installed_packages()
     return true, "Luarocks packages are installed"
   else
     local missing = ""
-    for _, name  in ipairs(xplr_uninstalled_packages) do
+    for _, name in ipairs(xplr_uninstalled_packages) do
       missing = missing .. name .. " "
     end
     return false, missing
@@ -133,19 +132,18 @@ M.check_health = function()
       health_info(("Luarocks: %s"):format(package.url))
       health_info(("Hererocks: %s"):format(hererocks_url))
       health_info(("Hererocks wget: %s"):format(hererocks_url_wget))
-      else
+    else
       health_ok("luarocks found on PATH")
-      end
+    end
 
-      if package.name == "luarocks" and installed then
+    if package.name == "luarocks" and installed then
       local ok, status = check_luarocks_installed_packages()
       if not ok then
         health_error(("missing luarocks packages for opening files in nvim: %s"):format(status))
         health_info("if using luarocks install these with: luarocks install nvim-client")
-             else
+      else
         health_ok("luarocks and required packages installed")
       end
-
     end
   end
 end

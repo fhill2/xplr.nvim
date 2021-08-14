@@ -5,6 +5,7 @@ local Previewer = require("xplr.previewer")
 local nui_utils = require("nui.utils")
 local mappings = require("xplr.mappings")
 
+
 local manager = {}
 manager.state = {
   --ui = {}
@@ -57,7 +58,7 @@ function manager.open(opts)
 
   -- setup keymaps on xplr window
   for _, keymap in ipairs(mappings.xplr) do
-       vim.api.nvim_buf_set_keymap(xplr.ui.bufnr, keymap[1], keymap[2], keymap[3], keymap[4])
+    vim.api.nvim_buf_set_keymap(xplr.ui.bufnr, keymap[1], keymap[2], keymap[3], keymap[4])
   end
 
   vim.api.nvim_set_current_win(xplr.ui.winid)
@@ -90,24 +91,24 @@ function manager._start_preview(opts)
     xplr.previewer = Previewer:new(opts)
   end
 
-  --manager._open_preview_window()
+  manager._open_preview_window()
   xplr.previewer:start(opts)
 end
 
 function manager._stop_preview(opts)
   manager._close_preview_window() --end
-
-  xplr.previewer:stop(opts)
+  vim.defer_fn(function()
+    xplr.previewer:stop(opts)
+  end, 0)
 end
 
 function manager.toggle_preview_window()
-
   if not xplr.previewer then
     return
   end
 
   if not xplr.previewer.ui.winid then
-    --manager._open_preview_window()
+    manager._open_preview_window()
   else
     manager._close_preview_window()
   end
@@ -129,7 +130,6 @@ function manager._open_preview_window()
 
   if config.previewer.split then
     local split_percent = config.previewer.split_percent
-
 
     local x_win = vim.deepcopy(vim.api.nvim_win_get_config(xplr.ui.winid))
     local p_win = vim.deepcopy(x_win)
@@ -192,20 +192,19 @@ function manager._previewer_autocmd(winid)
 end
 
 function manager._close_preview_window()
+  local relative
+  if config.xplr.ui.relative == "win" and config.xplr.ui.relative == "table" then
+    relative = { type = "win", winid = xplr.ui.popup_state.parent_winid }
+  else
+    relative = config.xplr.ui.relative
+  end
   xplr.previewer.ui:unmount()
 
-  if not config.previewer.split and config.previewer.ui then
-    local relative
-    if config.xplr.ui.relative == "win" and config.xplr.ui.relative == "table" then
-      relative = { type = "win", winid = xplr.ui.popup_state.parent_winid }
-    else
-      relative = config.xplr.ui.relative
-    end
-
+  if config.previewer.split then
+    -- NO SPLIT
     xplr.ui:set_position(config.xplr.ui.position, relative)
     xplr.ui:set_size(config.xplr.ui.size)
-    
-    --config.previewer.ui.position = config.previewer.ui.position + 1
+
     xplr.previewer.ui:set_position(config.previewer.ui.position, relative)
     xplr.previewer.ui:set_size(config.previewer.ui.size)
   end

@@ -1,5 +1,5 @@
--- starts async job to read xplr pipe and sends data to previewer 
-local plenary_job = require('plenary.job')
+-- starts async job to read xplr pipe and sends data to previewer
+local plenary_job = require("plenary.job")
 
 local Job = {}
 Job.__index = Job
@@ -11,23 +11,16 @@ function Job:new(opts)
   return setmetatable({}, Job)
 end
 
-
 function Job:start(opts)
-
-
-
- local on_output = function(_, line, _)
+  local on_output = function(_, line, _)
     if not line or line == "" then
       return
     end
---    log.info(line)
+    --    log.info(line)
     process_result(line)
   end
 
-
-
-
-self.job = plenary_job:new {
+  self.job = plenary_job:new({
     command = opts.command,
     args = opts.args,
     cwd = opts.cwd,
@@ -38,14 +31,9 @@ self.job = plenary_job:new {
 
     on_exit = function()
       process_complete()
- --     log.info('job exited')
+      --     log.info('job exited')
     end,
-  }
-
+  })
 end
-
-
-
-
 
 return Job
