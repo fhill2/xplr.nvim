@@ -17,9 +17,9 @@ function actions.open_selection(selection)
     end)
   end, filepaths)
 
-  -- if config.xplr.close_after_opening_files then
-  -- manager.close()
-  -- end
+  if config.xplr.close_after_opening_files then
+  manager.close()
+  end
 end
 
 -- telescope/actions/init.lua

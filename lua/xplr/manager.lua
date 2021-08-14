@@ -34,6 +34,7 @@ function manager.close()
   if xplr.previewer then
     -- cant stop due to xplr broken pipe error
     manager._close_preview_window()
+    --manager._stop_preview()
   end
 
   xplr.ui:unmount()
@@ -151,7 +152,7 @@ function manager._open_preview_window()
     p_win.width = math.floor(p_win.width * (1 - split_percent))
     p_win.col = math.floor(x_win.col + x_win.width) + 2
     p_win.height = x_win.height
-    p_win.row = x_win.row + 1
+    p_win.row = x_win.row
 
     vim.api.nvim_win_set_config(xplr.ui.winid, x_win)
 
@@ -179,6 +180,8 @@ function manager._open_preview_window()
       vim.api.nvim_buf_set_keymap(xplr.ui.bufnr, keymap[1], keymap[2], keymap[3], keymap[4])
     end
   end
+
+  vim.api.nvim_set_current_win(xplr.ui.winid)
 end
 
 function manager._previewer_autocmd(winid)

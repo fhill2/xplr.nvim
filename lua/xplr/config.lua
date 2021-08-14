@@ -10,7 +10,7 @@ config = {
         height = "60%",
       },
     },
-    --close_after_opening_files = false,
+    close_after_opening_files = false,
   },
   previewer = {
     split = true,
