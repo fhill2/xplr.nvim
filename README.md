@@ -9,6 +9,8 @@ simply opens xplr in a floating window, providing these features:
 
 - a simple API that wraps nvim lua msgpack client customized for xplr. This is so you can call nvim API functions or your own lua functions from xplr. 
 
+![nvim-xplr4](https://user-images.githubusercontent.com/16906982/129458538-ba41fc00-c940-4d53-b299-6bf9fdeeb2ad.gif)
+
 ## Installation
 #### Install plugin
 Using [packer.nvim](https://github.com/wbthomason/packer.nvim)
