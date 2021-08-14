@@ -27,7 +27,6 @@ Plug 'MunifTanjim/nui.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 ```
 
-You can then `call xplr#health#check()` to show info about and help with installation.
 
 #### Installation for optional features
 
