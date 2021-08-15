@@ -103,6 +103,12 @@ on_previewer_set_keymap("t", "<space>xn", '<Cmd>lua require"xplr.actions".scroll
 
 `previewer.split = false` uses `previewer.ui` config for previewer win when it opens
  
+## Opts
+list of available opts to use for `open()`
+
+`cwd`
+
+
 
 ## Keymap Config
 `set_keymap()` keymaps loaded on xplr window when xplr window opens
@@ -126,34 +132,18 @@ To remove this mapping in xplr:
 xplr.config.modes.builtin.default.key_bindings.on_key.space = {}
 ```
 
+### add VimL command
+There is no VimL command binded by default
 
+```vim
+command! -bar -nargs=? -complete=dir Xplr lua require'xplr'.load_command(<f-args>)
 
-### Usage
-
-Git project root
-
-```
-command XplrProjectRoot :Xplr `git rev-parse --show-toplevel`
-
-:XplrProjectRoot
-```
-
-Current file
-
-```
-:Xplr %:p
+-- Usage
+:Xplr %:p " current file
+:Xplr " cwd
+:Xplr / " root
 ```
 
-Current working directory
-
-```
-:Xplr
-```
-
-Root
-```
-:Xplr /
-```
 
 ## TODO
 
@@ -162,6 +152,8 @@ Root
 - file extension dependent preview switching
 - improve floating window UI - vertical layout
 - send to qflist 
+- cwd `open()` opts to support relative file paths
+- change xplr CWD via nvim lua function without reopening
 
 
 
