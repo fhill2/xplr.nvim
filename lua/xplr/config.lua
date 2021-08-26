@@ -1,32 +1,51 @@
+local log = require("log1")
+
 config = {
-  xplr = {
-    ui = {
-      border = {
-        style = "none",
-      },
-      position = "50%",
-      size = {
-        width = "80%",
-        height = "60%",
-      },
+  ui = {
+    border = {
+      style = "none",
     },
-    close_after_opening_files = false,
+    position = "50%",
+    size = {
+      width = "80%",
+      height = "60%",
+    },
+    relative = "win",
   },
+  close_after_opening_files = false,
   previewer = {
     split = true,
     split_percent = 0.5,
     --ui = {}
   },
+  xplr = {
+    open_selection = {
+      enabled = true,
+      mode = "action",
+      key = "o",
+    },
+    preview = {
+      enabled = true,
+      mode = "action",
+      key = "i",
+      fifo_path = "/tmp/nvim-xplr.fifo",
+    },
+  },
 }
 
 function config.setup(opts)
   -- disable setting border on xplr window
-  if opts.xplr.ui then
-    if opts.xplr.ui.border then
-      opts.xplr.ui.border = {
+  if opts.ui then
+    if opts.ui.border then
+      opts.ui.border = {
         style = "none",
       }
     end
+  end
+
+  -- if no separate previewer config, set main xplr ui config to previewer config
+  if opts.ui and not opts.previewer.ui then
+    config.previewer.ui = vim.deepcopy(opts.ui)
   end
 
   for key, val in pairs(opts) do

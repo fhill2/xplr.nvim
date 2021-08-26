@@ -1,5 +1,7 @@
 # xplr.nvim
-simply opens xplr in a floating window, providing these features:
+opens xplr inside nvim, and hosts a msgpack client inside xplr.
+
+Provides these features:
 
 - [xplr.vim](https://github.com/sayanarijit/xplr.vim) features: layout, mappings
 
@@ -7,7 +9,7 @@ simply opens xplr in a floating window, providing these features:
 
 - open selection in nvim
 
-- a simple API that wraps nvim lua msgpack client customized for xplr. This is so you can call nvim API functions or your own lua functions from xplr. 
+- a simple API that wraps nvim lua msgpack client customized for xplr. This is so you can call nvim API functions or your own lua functions from xplr. Also allows communication without using shell / pipes / neovim remote.
 
 ![nvim-xplr4](https://user-images.githubusercontent.com/16906982/129458538-ba41fc00-c940-4d53-b299-6bf9fdeeb2ad.gif)
 
@@ -16,8 +18,9 @@ simply opens xplr in a floating window, providing these features:
 Using [packer.nvim](https://github.com/wbthomason/packer.nvim)
 ```lua
 use {
-  'nvim-telescope/telescope.nvim',
-  requires = {{'nvim-lua/plenary.nvim'}, {'MunifTanjim/nui.nvim'}}
+  'fhill2/xplr.nvim',
+  requires = {{'nvim-lua/plenary.nvim'}, {'MunifTanjim/nui.nvim'}, {'nvim-telescope/telescope.nvim'}},
+  run = "git submodule update --init --recursive && cd src/luv && make && cd ../libmpack && make"
 }
 ```
 Using [vim-plug](https://github.com/junegunn/vim-plug)
@@ -25,14 +28,8 @@ Using [vim-plug](https://github.com/junegunn/vim-plug)
 Plug 'nvim-lua/plenary.nvim'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'fhill2/xplr.nvim'
 ```
-
-
-#### Installation for optional features
-
-- previewed hovered file - requires: [nvim.xplr](https://github.com/fhill2/nvim.xplr) [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
-- open selection in nvim - requires: [nvim.xplr](https://github.com/fhill2/nvim.xplr)
-- calling nvim lua & vim functions from xplr lua functions - requires: [nvim.xplr](https://github.com/fhill2/nvim.xplr)
 
 
 
@@ -132,16 +129,60 @@ To remove this mapping in xplr:
 xplr.config.modes.builtin.default.key_bindings.on_key.space = {}
 ```
 
-### add VimL command
+#### Vim command
 There is no VimL command binded by default
 
 ```vim
 command! -bar -nargs=? -complete=dir Xplr lua require'xplr'.load_command(<f-args>)
 
--- Usage
+" Usage
 :Xplr %:p " current file
 :Xplr " cwd
 :Xplr / " root
+```
+
+
+#### API
+##### Examples for creating custom commands
+Creating your own Commands that interact with nvim:
+
+requiring `nvim-xplr` in xplr `init.lua`returns the msgpack client object.
+
+You can then use the msgpack client within your xplr lua functions in `xplr/init.lua` to trigger and send data to functions in nvim like this:
+
+```lua
+
+xplr.fn.custom.nvim_hello = function(app)
+ nvim:exec_lua(
+          'return require"xplr.actions".hello_world(...)', app)
+
+  
+return { LogSuccess = "combine messages and nvim API calls" }
+end 
+
+xplr.config.modes.builtin.action.key_bindings.on_key["u"] = {
+      help = "hello nvim",
+      messages = {
+        { CallLuaSilently = "custom.nvim_hello" },
+      },
+    }
+
+``` 
+
+msgpack client accepts tables, client will nil all userdata/function refs
+
+you can call whatever nvim API method you want, however i've found it easier to send data over to a nvim function and do the work on the nvim side.
+
+```lua
+
+-- call nvim functions from xplr function
+ nvim:exec_lua('return require"xplr.actions".hello_world(...)', data)
+
+-- call vimL functions from xplr function
+ nvim:command('echo "hello world"')
+
+-- call any nvim API method like this (untested)
+nvim:request("nvim_command", "echo v:servername")
 ```
 
 

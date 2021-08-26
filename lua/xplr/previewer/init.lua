@@ -9,7 +9,7 @@ Previewer.__index = Previewer
 
 function Previewer:new(opts)
   return setmetatable({
-    ui = Popup(vim.deepcopy(config.previewer.ui or config.xplr.ui)), -- pass xplr opts then change w set_position
+    ui = Popup(vim.deepcopy(config.previewer.ui)),
     file = previewers.vim_buffer_cat.new({}),
     xplr_winid = opts.xplr_winid,
   }, Previewer)
@@ -27,11 +27,10 @@ function Previewer:start(opts)
       preview_win = self.ui.winid,
       prompt_win = self.xplr_winid,
     })
-      
-    if vim.api.nvim_get_current_win() ~= self.xplr_winid then
-    vim.api.nvim_set_current_win(self.xplr_winid)
-  end
 
+    if vim.api.nvim_get_current_win() ~= self.xplr_winid then
+      vim.api.nvim_set_current_win(self.xplr_winid)
+    end
   end)
 
   self.job = Job:new({

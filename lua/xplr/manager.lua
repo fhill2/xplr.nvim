@@ -5,7 +5,6 @@ local Previewer = require("xplr.previewer")
 local nui_utils = require("nui.utils")
 local mappings = require("xplr.mappings")
 
-
 local manager = {}
 manager.state = {
   --ui = {}
@@ -13,6 +12,7 @@ manager.state = {
   --   ui = {},
   --   job = {},
   --}
+  -- job = int
 }
 
 local xplr = manager.state
@@ -31,6 +31,10 @@ function manager.toggle()
 end
 
 function manager.close()
+  if not xplr.ui then
+    return
+  end
+
   if xplr.previewer then
     -- cant stop due to xplr broken pipe error
     manager._close_preview_window()
@@ -38,13 +42,14 @@ function manager.close()
   end
 
   xplr.ui:unmount()
+  xplr.parent_winnr = nil
 end
 
 function manager.open(opts)
   opts = opts or {}
 
   if not xplr.ui then
-    xplr.ui = Popup(config.xplr.ui)
+    xplr.ui = Popup(config.ui)
   end
 
   if xplr.ui.winid then
@@ -54,7 +59,11 @@ function manager.open(opts)
 
   local cd = opts.cwd or vim.fn.getcwd()
 
-  manager.last_editor_winnr = vim.api.nvim_get_current_win()
+  -- parent_winnr stays the same until close()
+  xplr.parent_winnr = vim.api.nvim_get_current_win()
+  -- last_editor_winnr is changed by focus()
+  xplr.last_editor_winnr = vim.api.nvim_get_current_win()
+
   xplr.ui:mount()
 
   -- setup keymaps on xplr window
@@ -64,10 +73,19 @@ function manager.open(opts)
 
   vim.api.nvim_set_current_win(xplr.ui.winid)
 
-  local cmd = string.format([[zsh -c 'xplr "%s"']], cd)
-  vim.fn.termopen(cmd, {
-    env = { NVIM_XPLR = 1, NVIM_XPLR_SERVERNAME = vim.v.servername },
-  })
+  -- get path to nvim_xplr
+  local rtp = vim.split(vim.api.nvim_get_option("rtp"), ",")
+  local xplr_nvim_init
+  for _, path in ipairs(rtp) do
+    if path:match("xplr.nvim$") then
+      xplr_nvim_init = ("%s/xplr/init.lua"):format(path)
+      break
+    end
+  end
+
+  local cmd = string.format([[%s -c 'xplr -C "%s" "%s"']], vim.o.shell, xplr_nvim_init, cd)
+  vim.fn.termopen(cmd)
+
   vim.cmd("startinsert")
 end
 
@@ -121,10 +139,10 @@ function manager._open_preview_window()
 
   --fix for terminal nui floating windows
   local relative
-  if config.xplr.ui.relative == "win" then
-    relative = { type = "win", winid = xplr.ui.popup_state.parent_winid }
+  if config.ui.relative == "win" then
+    relative = { type = "win", winid = xplr.parent_winnr }
   else
-    relative = config.xplr.ui.relative
+    relative = config.ui.relative
   end
 
   xplr.previewer.ui:mount()
@@ -155,7 +173,6 @@ function manager._open_preview_window()
     p_win.row = x_win.row
 
     vim.api.nvim_win_set_config(xplr.ui.winid, x_win)
-
     xplr.previewer.ui:set_position({ row = p_win.row, col = p_win.col - 2 }, relative)
     xplr.previewer.ui:set_size({ width = p_win.width, height = p_win.height - 2 })
   end
@@ -196,17 +213,17 @@ end
 
 function manager._close_preview_window()
   local relative
-  if config.xplr.ui.relative == "win" and config.xplr.ui.relative == "table" then
+  if config.ui.relative == "win" and config.ui.relative == "table" then
     relative = { type = "win", winid = xplr.ui.popup_state.parent_winid }
   else
-    relative = config.xplr.ui.relative
+    relative = config.ui.relative
   end
   xplr.previewer.ui:unmount()
 
   if config.previewer.split then
     -- NO SPLIT
-    xplr.ui:set_position(config.xplr.ui.position, relative)
-    xplr.ui:set_size(config.xplr.ui.size)
+    xplr.ui:set_position(config.ui.position, relative)
+    xplr.ui:set_size(config.ui.size)
 
     xplr.previewer.ui:set_position(config.previewer.ui.position, relative)
     xplr.previewer.ui:set_size(config.previewer.ui.size)
@@ -221,11 +238,11 @@ function manager.focus()
   local xplr_focused = c_win == xplr.ui.winid or false
 
   if xplr_focused then
-    if manager.last_editor_winnr then
-      vim.api.nvim_set_current_win(manager.last_editor_winnr)
+    if xplr.last_editor_winnr then
+      vim.api.nvim_set_current_win(xplr.last_editor_winnr)
     end
   else
-    manager.last_editor_winnr = vim.api.nvim_get_current_win()
+    xplr.last_editor_winnr = vim.api.nvim_get_current_win()
     vim.api.nvim_set_current_win(xplr.ui.winid)
     vim.cmd("startinsert")
   end
