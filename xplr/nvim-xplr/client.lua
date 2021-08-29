@@ -52,7 +52,7 @@ end)()
 function Client:exec_lua(code, t)
   self._session:request("nvim_exec_lua", code, { deepnil(t) })
   if #self._session._pending_messages > 0 then
-    return self._session:next_message()
+    return self._session:next_message()[3]
   end
 end
 --end

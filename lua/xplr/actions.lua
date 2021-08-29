@@ -24,6 +24,16 @@ function actions.open_selection(selection)
   end
 end
 
+function actions.set_nvim_cwd(cwd)
+vim.api.nvim_set_current_dir(cwd) 
+end
+
+function actions.get_nvim_cwd()
+vim.fn.rpcnotify(xplr_chan_id, "nvim_cwd", vim.fn.getcwd())
+end
+
+
+
 -- telescope/actions/init.lua
 
 function actions.scroll_previewer_up()
@@ -35,12 +45,11 @@ function actions.scroll_previewer_down()
 end
 
 actions.scroll_previewer = function(direction)
-  -- local state = require('telescope.state')
-  -- --local status = state.get_status(prompt_bufnr)
   local default_speed = vim.api.nvim_win_get_height(xplr.previewer.ui.winid) / 2
   local speed = config.previewer.scroll_speed or default_speed
   xplr.previewer.file:scroll_fn(math.floor(speed * direction))
 end
+
 
 function actions._host_is_ready(arg)
   local channels = vim.api.nvim_list_chans()

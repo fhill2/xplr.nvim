@@ -30,6 +30,17 @@ config = {
       key = "i",
       fifo_path = "/tmp/nvim-xplr.fifo",
     },
+    set_nvim_cwd = {
+      enabled = true,
+      mode = "action",
+      key = "j",
+    },
+    set_xplr_cwd = {
+      enabled = true,
+      mode = "action",
+      key = "h",
+    },
+
   },
 }
 

@@ -9,6 +9,8 @@ Provides these features:
 
 - open selection in nvim
 
+- set cwd: nvim <--> xplr 
+
 - a simple API that wraps nvim lua msgpack client customized for xplr. This is so you can call nvim API functions or your own lua functions from xplr. Also allows communication without using shell / pipes / neovim remote.
 
 ![nvim-xplr4](https://user-images.githubusercontent.com/16906982/129458538-ba41fc00-c940-4d53-b299-6bf9fdeeb2ad.gif)
@@ -36,7 +38,6 @@ Plug 'fhill2/xplr.nvim'
 ## Configuration
 ```lua
 require("xplr").setup({
-  xplr = {
     ui = {
       border = {
         style = "single",
@@ -49,7 +50,6 @@ require("xplr").setup({
         height = "60%",
       },
     },
-  },
   previewer = {
     split = true,
     split_percent = 0.5,
@@ -66,6 +66,28 @@ require("xplr").setup({
       },
     },
   },
+ xplr = {
+    open_selection = {
+      enabled = true,
+      mode = "action",
+      key = "o",
+    },
+    preview = {
+      enabled = true,
+      mode = "action",
+      key = "i",
+      fifo_path = "/tmp/nvim-xplr.fifo",
+    },
+    set_nvim_cwd = {
+      enabled = true,
+      mode = "action",
+      key = "j",
+    },
+    set_xplr_cwd = {
+      enabled = true,
+      mode = "action",
+      key = "h",
+    },
 })
 
 local opts = { noremap = true, silent = true }
@@ -108,15 +130,10 @@ list of available opts to use for `open()`
 
 
 ## Keymap Config
+
 `set_keymap()` keymaps loaded on xplr window when xplr window opens
 
 `on_previewer_set_keymap()` keymaps loaded on xplr window when preview window opens
-
-Keymaps configured in the [nvim.xplr](https://github.com/fhill2/nvim.xplr) plugin:
-
-- open xplr selection in nvim
-- previewer hovered selection in Telescope driven previewer
-
 
 #### Keymap Conflicts
 the default mappings above conflict with the default xplr mappings to select files (space).
