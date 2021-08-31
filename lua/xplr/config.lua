@@ -22,7 +22,7 @@ config = {
     open_selection = {
       enabled = true,
       mode = "action",
-      key = "o",
+      key = "e",
     },
     preview = {
       enabled = true,

@@ -36,9 +36,7 @@ function manager.close()
   end
 
   if xplr.previewer then
-    -- cant stop due to xplr broken pipe error
     manager._close_preview_window()
-    --manager._stop_preview()
   end
 
   xplr.ui:unmount()
@@ -73,18 +71,10 @@ function manager.open(opts)
 
   vim.api.nvim_set_current_win(xplr.ui.winid)
 
-  -- get path to nvim_xplr
-  local rtp = vim.split(vim.api.nvim_get_option("rtp"), ",")
-  local xplr_nvim_init
-  for _, path in ipairs(rtp) do
-    if path:match("xplr.nvim$") then
-      xplr_nvim_init = ("%s/xplr/init.lua"):format(path)
-      break
-    end
-  end
-
-  local cmd = string.format([[%s -c 'xplr -C "%s" "%s"']], vim.o.shell, xplr_nvim_init, cd)
-  vim.fn.termopen(cmd)
+  local cmd = string.format([[%s -c 'xplr -C "%s" "%s"']], vim.o.shell, utils.get_nvim_xplr_init(false, false), cd)
+  vim.fn.termopen(cmd, {
+    env = { NVIM_XPLR_ROOT = utils.get_nvim_xplr_init(false, true) },
+  })
 
   vim.cmd("startinsert")
 end

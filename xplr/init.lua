@@ -1,4 +1,4 @@
-local root = "/home/f1/.local/share/nvim/site/pack/packer/start/xplr.nvim"
+local root = os.getenv("NVIM_XPLR_ROOT")
 
 local deps_vim = "/usr/share/nvim/runtime/lua/vim/?.lua"
 local deps_nvim_xplr = ("%s%s"):format(root, "/xplr/?.lua")
@@ -10,8 +10,8 @@ local cdeps_luv = ("%s%s"):format(root, "/src/luv/?.so")
 package.path = package.path .. ";" .. deps_nvim_xplr .. ";" .. deps_luaclient .. ";" .. deps_coxpcall .. ";" .. deps_vim
 package.cpath = package.cpath .. ";" .. cdeps_mpack .. ";" .. cdeps_luv
 
-vim = require("shared")
-vim.inspect = require("inspect")
+_, vim = pcall(require, "shared")
+_, vim.inspect = pcall(require, "inspect")
 
 local Client = require("nvim-xplr.client")
 local client = Client:new(os.getenv("NVIM_LISTEN_ADDRESS"))
@@ -26,7 +26,6 @@ client:request(
 )
 
 local opts = client:exec_lua([[return require'xplr.actions'._host_is_ready(...)]], {})[1]
-
 
 if opts.preview.enabled then
   os.execute("[ ! -p '" .. opts.preview.fifo_path .. "' ] && mkfifo '" .. opts.preview.fifo_path .. "'")
@@ -87,13 +86,12 @@ if opts.set_nvim_cwd.enabled then
       { CallLua = "custom.set_nvim_cwd" },
     },
   }
-
 end
 
 if opts.set_xplr_cwd.enabled then
   xplr.fn.custom.set_xplr_cwd = function(app)
     local cwd = client:exec_lua([[return require'xplr.actions'.get_nvim_cwd(...)]], {})[1]
-    return {{ChangeDirectory = cwd}}
+    return { { ChangeDirectory = cwd } }
   end
 
   xplr.config.modes.builtin[opts.set_xplr_cwd.mode].key_bindings.on_key[opts.set_xplr_cwd.key] = {
@@ -103,7 +101,4 @@ if opts.set_xplr_cwd.enabled then
       { CallLua = "custom.set_xplr_cwd" },
     },
   }
-
 end
-
-

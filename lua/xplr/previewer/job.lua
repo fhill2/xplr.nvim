@@ -31,7 +31,6 @@ function Job:start(opts)
 
     on_exit = function()
       process_complete()
-      --     log.info('job exited')
     end,
   })
 end

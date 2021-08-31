@@ -24,6 +24,8 @@ use {
   requires = {{'nvim-lua/plenary.nvim'}, {'MunifTanjim/nui.nvim'}, {'nvim-telescope/telescope.nvim'}},
   run = "git submodule update --init --recursive && cd src/luv && make && cd ../libmpack && make"
 }
+
+
 ```
 Using [vim-plug](https://github.com/junegunn/vim-plug)
 ```lua
@@ -33,6 +35,10 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'fhill2/xplr.nvim'
 ```
 
+Use `checkhealth xplr` to test:
+- if nvim can find all required dependencies (other plugins)
+- if xplr can find all required msgpack client dependencies
+- checks if nvim can receive msgpack data from xplr 
 
 
 ## Configuration
