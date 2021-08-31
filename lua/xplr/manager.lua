@@ -94,7 +94,13 @@ end
 
 function manager._start_preview(opts)
   opts = opts or {}
+
+  if xplr.ui then
   opts.xplr_winid = xplr.ui.winid
+  else
+  -- opened from a neovim terminal
+  opts.xplr_winid = vim.api.nvim_get_current_win()
+end
 
   if not xplr.previewer then
     xplr.previewer = Previewer:new(opts)
@@ -137,7 +143,7 @@ function manager._open_preview_window()
 
   xplr.previewer.ui:mount()
 
-  if config.previewer.split then
+  if xplr.ui and config.previewer.split then
     local split_percent = config.previewer.split_percent
 
     local x_win = vim.deepcopy(vim.api.nvim_win_get_config(xplr.ui.winid))
@@ -168,7 +174,7 @@ function manager._open_preview_window()
   end
 
   -- setup xplr buf autocmd once on 1 buffer
-  if xplr.ui.bufnr then
+  if xplr.ui and xplr.ui.bufnr then
     vim.cmd(
       [[autocmd WinClosed <buffer=]] .. xplr.ui.bufnr .. [[> ++nested ++once :silent lua require('xplr').close()]]
     )
@@ -182,14 +188,19 @@ function manager._open_preview_window()
     vim.cmd([[autocmd WinClosed * lua require('xplr.manager')._previewer_autocmd('<afile>')]])
     vim.cmd("augroup END")
 
+  if xplr.ui then
     -- setup keymaps on xplr window when previewer opens
     for _, keymap in ipairs(mappings.previewer_xplr) do
       vim.api.nvim_buf_set_keymap(xplr.ui.bufnr, keymap[1], keymap[2], keymap[3], keymap[4])
     end
+ vim.api.nvim_set_current_win(xplr.ui.winid)
+
   end
 
-  vim.api.nvim_set_current_win(xplr.ui.winid)
+
 end
+
+ end
 
 function manager._previewer_autocmd(winid)
   local ok, status = pcall(vim.api.nvim_win_get_var, winid, "XplrPreviewer")

@@ -164,6 +164,22 @@ command! -bar -nargs=? -complete=dir Xplr lua require'xplr'.load_command(<f-args
 :Xplr / " root
 ```
 
+#### Opening xplr with msgpack client in a non floating window
+xplr and the msgpack client can be used without the UI in a terminal inside neovim:
+export `NVIM_XPLR_ROOT` and use `xplr -C` to load the msgpack client config file on xplr startup
+
+I use this snippet (.zshrc) as a temporary solution for now (I intend on working on this more)
+
+```zsh
+function xplr() {
+  if [[ -v NVIM_LISTEN_ADDRESS ]]; then
+  export NVIM_XPLR_ROOT=~/.local/share/nvim/site/pack/packer/start/xplr.nvim
+  /usr/bin/xplr -C "/home/user/.local/share/nvim/site/pack/packer/start/xplr.nvim/xplr/init.lua" $@ # ~ isnt supported
+  else
+  /usr/bin/xplr $@
+  fi
+}
+```
 
 #### API
 ##### Examples for creating custom commands

@@ -27,9 +27,9 @@ function Previewer:start(opts)
       prompt_win = self.xplr_winid,
     })
 
-    if vim.api.nvim_get_current_win() ~= self.xplr_winid then
-      vim.api.nvim_set_current_win(self.xplr_winid)
-    end
+    -- if vim.api.nvim_get_current_win() ~= self.xplr_winid then
+    --   vim.api.nvim_set_current_win(self.xplr_winid)
+    -- end
   end)
 
   self.job = Job:new({
