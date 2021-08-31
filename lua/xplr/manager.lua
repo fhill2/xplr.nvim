@@ -71,9 +71,9 @@ function manager.open(opts)
 
   vim.api.nvim_set_current_win(xplr.ui.winid)
 
-  local cmd = string.format([[%s -c 'xplr -C "%s" "%s"']], vim.o.shell, utils.get_nvim_xplr_init(false, false), cd)
+  local cmd = string.format([[%s -c 'xplr -C "%s" "%s"']], vim.o.shell, utils.get_init(), cd)
   vim.fn.termopen(cmd, {
-    env = { NVIM_XPLR_ROOT = utils.get_nvim_xplr_init(false, true) },
+    env = { NVIM_XPLR_ROOT = utils.get_root() },
   })
 
   vim.cmd("startinsert")

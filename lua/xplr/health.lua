@@ -128,10 +128,10 @@ local function check_xplr_health()
 
   os.execute(("[ ! -p '%s' ] && mkfifo '%s'"):format(health_fifo, health_fifo))
 
-  local cmd = string.format([[%s -c 'xplr -C "%s"']], vim.o.shell, utils.get_nvim_xplr_init(true, false))
+  local cmd = string.format([[%s -c 'xplr -C "%s"']], vim.o.shell, utils.get_init_health())
 
   xplr_id = vim.fn.jobstart(cmd, {
-    env = { NVIM_XPLR_ROOT = utils.get_nvim_xplr_init(true, true) },
+    env = { NVIM_XPLR_ROOT = utils.get_root() },
     on_exit = function()
     end,
   })
