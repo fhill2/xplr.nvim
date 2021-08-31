@@ -50,7 +50,7 @@ local health_fifo = '/tmp/nvim-xplr-health.fifo'
 
 local function check_git_submodule()
   local scan_result = {}
-  local fd = uv.fs_scandir(root .. "/src/lua-client")
+  local fd = uv.fs_scandir(root .. "/xplr/src/lua-client")
   if fd then
     while true do
       local name, typ = uv.fs_scandir_next(fd)

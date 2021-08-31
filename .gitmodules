@@ -1,12 +1,12 @@
-[submodule "src/lua-client"]
-	path = src/lua-client
-	url = https://github.com/neovim/lua-client
-[submodule "src/coxpcall"]
-	path = src/coxpcall
+[submodule "xplr/src/coxpcall"]
+	path = xplr/src/coxpcall
 	url = https://github.com/keplerproject/coxpcall
-[submodule "src/luv"]
-	path = src/luv
+[submodule "xplr/src/luv"]
+	path = xplr/src/luv
 	url = https://github.com/luvit/luv
-[submodule "src/libmpack"]
-	path = src/libmpack
+[submodule "xplr/src/libmpack"]
+	path = xplr/src/libmpack
 	url = https://github.com/libmpack/libmpack-lua
+[submodule "xplr/src/lua-client"]
+	path = xplr/src/lua-client
+	url = https://github.com/neovim/lua-client

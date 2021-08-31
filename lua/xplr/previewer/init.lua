@@ -18,11 +18,10 @@ end
 function Previewer:start(opts)
   opts = opts or {}
 
-  local on_output = vim.schedule_wrap(function(_, line, _)
+  local on_output = vim.schedule_wrap(function(_, line)
     if not line or line == "" then
       return
     end
-    --log.info(line)
     self.file:preview({ path = line }, {
       preview_win = self.ui.winid,
       prompt_win = self.xplr_winid,
@@ -41,6 +40,8 @@ function Previewer:start(opts)
     on_stderr = on_output,
   })
   self.job:start()
+
+
   return
 end
 

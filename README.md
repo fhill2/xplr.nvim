@@ -22,7 +22,7 @@ Using [packer.nvim](https://github.com/wbthomason/packer.nvim)
 use {
   'fhill2/xplr.nvim',
   requires = {{'nvim-lua/plenary.nvim'}, {'MunifTanjim/nui.nvim'}, {'nvim-telescope/telescope.nvim'}},
-  run = "git submodule update --init --recursive && cd src/luv && make && cd ../libmpack && make"
+  run = "git submodule update --init --recursive && cd xplr/src/luv && make && cd ../libmpack && make"
 }
 
 
