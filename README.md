@@ -249,15 +249,16 @@ nvim:request("nvim_command", "echo v:servername")
 ```
 
 
+
 ## TODO
 
-- UI with standard windows instead of floating (nui/split/init.lua)
+- toggleterm & floaterm integration 
+- improve non floating window behaviour (using xplr msgpack in nvim pseudo terminals)
 - Option to register autocmd to close xplr when leaving xplr buf
 - file extension dependent preview switching
 - improve floating window UI - vertical layout
-- send to qflist 
+- send to qflist & other helpful default actions
 - cwd `open()` opts to support relative file paths
-- change xplr CWD via nvim lua function without reopening
 
 
 
