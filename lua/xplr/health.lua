@@ -2,7 +2,6 @@ local utils = require("xplr.utils")
 local Job = require("plenary.job")
 local uv = vim.loop
 local root = utils.get_root()
-
 local health = {}
 
 local health_start = vim.fn["health#report_start"]

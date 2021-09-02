@@ -16,29 +16,53 @@ Provides these features:
 ![nvim-xplr4](https://user-images.githubusercontent.com/16906982/129458538-ba41fc00-c940-4d53-b299-6bf9fdeeb2ad.gif)
 
 ## Installation
-#### Install plugin
+Install like any other plugin and nvim will (try to) build the required xplr dependencies after installation using a post install/update function.
+
 Using [packer.nvim](https://github.com/wbthomason/packer.nvim)
 ```lua
 use {
   'fhill2/xplr.nvim',
-  requires = {{'nvim-lua/plenary.nvim'}, {'MunifTanjim/nui.nvim'}, {'nvim-telescope/telescope.nvim'}},
-  run = "git submodule update --init --recursive && cd xplr/src/luv && make && cd ../libmpack && make"
+  run = function() require'xplr'.install({hide=true}) end,
+  requires = {{'nvim-lua/plenary.nvim'}, {'MunifTanjim/nui.nvim'}}
 }
-
-
 ```
 Using [vim-plug](https://github.com/junegunn/vim-plug)
-```lua
+```vim
+Plug 'nvim-telescope/telescope.nvim' " optional
 Plug 'nvim-lua/plenary.nvim'
 Plug 'MunifTanjim/nui.nvim'
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'fhill2/xplr.nvim'
+Plug 'fhill2/xplr.nvim', { 'do': ':lua require\"xplr\".install({hide=true})' }
+
 ```
 
 Use `checkhealth xplr` to test:
 - if nvim can find all required dependencies (other plugins)
 - if xplr can find all required msgpack client dependencies
 - checks if nvim can receive msgpack data from xplr 
+
+
+
+#### Why the post install function?
+So the installation can be fully automated via package manager.
+It starts jobs which run these commands:
+
+```bash
+git submodule update --init --recursive
+cd xplr/src/luv && make 
+cd ../libmpack && make"
+
+```
+
+If you prefer to install the xplr deps manually, running the above in the root of the plugin directory does the same as the install/update hook.
+
+
+When installing, to see the output of the post install/update hook:
+`{hide=false}`
+
+or execute this after with `{hide=true}`
+```lua
+lua require'xplr.install'.show()
+```
 
 
 ## Configuration

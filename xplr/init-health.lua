@@ -3,10 +3,10 @@ local root = os.getenv("NVIM_XPLR_ROOT")
 local deps_vim = "/usr/share/nvim/runtime/lua/vim/?.lua"
 local deps_nvim_xplr = ("%s%s"):format(root, "/xplr/?.lua")
 
-local deps_luaclient = ("%s%s"):format(root, "/src/lua-client/?.lua")
-local deps_coxpcall = ("%s%s"):format(root, "/src/coxpcall/src/?.lua")
-local cdeps_mpack = ("%s%s"):format(root, "/src/libmpack/?.so")
-local cdeps_luv = ("%s%s"):format(root, "/src/luv/?.so")
+local deps_luaclient = ("%s%s"):format(root, "/xplr/src/lua-client/?.lua")
+local deps_coxpcall = ("%s%s"):format(root, "/xplr/src/coxpcall/src/?.lua")
+local cdeps_mpack = ("%s%s"):format(root, "/xplr/src/libmpack/?.so")
+local cdeps_luv = ("%s%s"):format(root, "/xplr/src/luv/?.so")
 package.path = package.path .. ";" .. deps_nvim_xplr .. ";" .. deps_luaclient .. ";" .. deps_coxpcall .. ";" .. deps_vim
 package.cpath = package.cpath .. ";" .. cdeps_mpack .. ";" .. cdeps_luv
 

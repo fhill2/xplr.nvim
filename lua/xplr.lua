@@ -1,6 +1,7 @@
 local xplr = {}
 local config = require("xplr.config")
 local manager = require("xplr.manager")
+local install = require("xplr.install")
 
 function xplr.selection(sel)
   print(sel)
@@ -33,9 +34,10 @@ function xplr.setup(opts)
   config.setup(opts)
 end
 
--- function xplr.setup_keymap(...)
--- config.setup_keymap(...)
--- end
+function xplr.install(opts)
+install.install(opts)
+end
+
 
 function xplr.load_command(cwd)
   manager.open({ cwd = cwd })

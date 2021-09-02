@@ -33,14 +33,14 @@ function utils.get_absolute_paths(selection)
 end
 
 function utils.get_root()
+  -- removed cause nvim_get_option is not "fast", might add back in
   -- get path to nvim_xplr
-  local rtp = vim.split(vim.api.nvim_get_option("rtp"), ",")
-  
-  for _, path in ipairs(rtp) do
-    if path:match("xplr.nvim$") then
-      return path
-    end
-  end
+  --local rtp = vim.split(vim.api.nvim_get_option("rtp"), ",")  
+  -- for _, path in ipairs(rtp) do
+  --   if path:match("xplr.nvim$") then
+  --     return path
+  --   end
+  -- end
 -- if calling this at startup (workaround for toggleterm config)
 return debug.getinfo(1).source:match('@(.*/xplr.nvim)/')
 end
@@ -54,7 +54,7 @@ function utils.get_init_health()
 end
 
 
-function utils.check_git_submodule(root)
+utils.check_git_submodule = function(root)
   local scan_result = {}
   local fd = uv.fs_scandir(root .. "/xplr/src/luv")
   if fd then
@@ -66,15 +66,11 @@ function utils.check_git_submodule(root)
       table.insert(scan_result, name)
     end
   end
-log.info(scan_result)
   if not vim.tbl_isempty(scan_result) then
     return true
   else
     return false
   end
-
-
-
 end
 
 
