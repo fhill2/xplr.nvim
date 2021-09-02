@@ -1,7 +1,7 @@
 local utils = require("xplr.utils")
 local Job = require("plenary.job")
 local uv = vim.loop
-local root = utils.get_nvim_xplr_init(_, true)
+local root = utils.get_root()
 
 local health = {}
 
@@ -48,25 +48,6 @@ local msgpack = {}
 local xplr_id
 local health_fifo = '/tmp/nvim-xplr-health.fifo'
 
-local function check_git_submodule()
-  local scan_result = {}
-  local fd = uv.fs_scandir(root .. "/xplr/src/lua-client")
-  if fd then
-    while true do
-      local name, typ = uv.fs_scandir_next(fd)
-      if name == nil then
-        break
-      end
-      table.insert(scan_result, name)
-    end
-  end
-
-  if not vim.tbl_isempty(scan_result) then
-    return true
-  else
-    return false
-  end
-end
 
 local function generate_xplr_deps_msg()
   local failed_msg = {
@@ -168,7 +149,7 @@ function health.check_health()
 
   check_nvim_health()
 
-  if not check_git_submodule() then
+  if not utils.check_git_submodule(root) then
     health_warn("msgpack client dependencies not installed")
     health_info("to install:")
     health_info("cd " .. root)

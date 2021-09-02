@@ -1,5 +1,7 @@
 local utils = {}
+local uv = vim.loop
 
+local log = require'log1'
 function utils.defaults(v, default_value)
   return type(v) == "nil" and default_value or v
 end
@@ -33,12 +35,14 @@ end
 function utils.get_root()
   -- get path to nvim_xplr
   local rtp = vim.split(vim.api.nvim_get_option("rtp"), ",")
-
+  
   for _, path in ipairs(rtp) do
     if path:match("xplr.nvim$") then
       return path
     end
   end
+-- if calling this at startup (workaround for toggleterm config)
+return debug.getinfo(1).source:match('@(.*/xplr.nvim)/')
 end
 
 function utils.get_init()
@@ -50,16 +54,28 @@ function utils.get_init_health()
 end
 
 
--- function utils.get_nvim_xplr_init(health, root)
+function utils.check_git_submodule(root)
+  local scan_result = {}
+  local fd = uv.fs_scandir(root .. "/xplr/src/luv")
+  if fd then
+    while true do
+      local name, typ = uv.fs_scandir_next(fd)
+      if name == nil then
+        break
+      end
+      table.insert(scan_result, name)
+    end
+  end
+log.info(scan_result)
+  if not vim.tbl_isempty(scan_result) then
+    return true
+  else
+    return false
+  end
 
--- if not health and not root then
--- return ("%s/xplr/init.lua"):format(xplr_nvim_path)
--- elseif health and not root then
--- return ("%s/xplr/init-health.lua"):format(xplr_nvim_path)
--- elseif root then
--- return xplr_nvim_path
--- end
 
--- end
+
+end
+
 
 return utils
