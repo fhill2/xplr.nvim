@@ -1,4 +1,3 @@
-local log = require("log1")
 
 config = {
   ui = {
