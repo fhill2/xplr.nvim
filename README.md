@@ -68,18 +68,18 @@ lua require'xplr.install'.show()
 ## Configuration
 ```lua
 require("xplr").setup({
-    ui = {
-      border = {
-        style = "single",
-        highlight = "FloatBorder",
-      },
-      position = "30%",
-
-      size = {
-        width = "40%",
-        height = "60%",
-      },
+  ui = {
+    border = {
+      style = "single",
+      highlight = "FloatBorder",
     },
+    position = "30%",
+
+    size = {
+      width = "40%",
+      height = "60%",
+    },
+  },
   previewer = {
     split = true,
     split_percent = 0.5,
@@ -96,7 +96,7 @@ require("xplr").setup({
       },
     },
   },
- xplr = {
+  xplr = {
     open_selection = {
       enabled = true,
       mode = "action",
@@ -118,7 +118,9 @@ require("xplr").setup({
       mode = "action",
       key = "h",
     },
+  },
 })
+
 
 local opts = { noremap = true, silent = true }
 local nvim_set_keymap = vim.api.nvim_set_keymap
