@@ -1,4 +1,3 @@
-
 local root = os.getenv("NVIM_XPLR_ROOT")
 
 local deps_vim = "/usr/share/nvim/runtime/lua/vim/?.lua"
@@ -12,14 +11,13 @@ local cdeps_luv = ("%s%s"):format(root, "/xplr/src/luv/?.so")
 package.path = package.path .. ";" .. deps_nvim_xplr .. ";" .. deps_luaclient .. ";" .. deps_coxpcall .. ";" .. deps_vim
 package.cpath = package.cpath .. ";" .. cdeps_mpack .. ";" .. cdeps_luv
 
-_, vim = pcall(require, "shared")
-_, vim.inspect = pcall(require, "inspect")
-
+if pcall(require, "shared") then
+  _, vim = pcall(require, "shared")
+     _, vim.inspect = pcall(require, "inspect")
+end
 
 local Client = require("nvim-xplr.client")
 local client = Client:new(os.getenv("NVIM_LISTEN_ADDRESS"))
-
-
 
 client:request(
   "nvim_set_client_info",

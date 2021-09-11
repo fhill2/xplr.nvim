@@ -4,12 +4,15 @@ config = {
     border = {
       style = "none",
     },
-    position = "50%",
+ position = {
+     row = "90%",
+     col = "50%",
+    },
+    relative = "editor",
     size = {
       width = "80%",
-      height = "60%",
+      height = "30%",
     },
-    relative = "win",
   },
   close_after_opening_files = false,
   previewer = {
@@ -45,13 +48,14 @@ config = {
 
 function config.setup(opts)
   -- disable setting border on xplr window
-  if opts.ui then
-    if opts.ui.border then
-      opts.ui.border = {
-        style = "none",
-      }
-    end
-  end
+  -- might re enable this
+  -- if opts.ui then
+  --   if opts.ui.border then
+  --     opts.ui.border = {
+  --       style = "none",
+  --     }
+  --   end
+  -- end
 
   -- if no separate previewer config, set main xplr ui config to previewer config
   if opts.ui and not opts.previewer.ui then

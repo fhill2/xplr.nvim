@@ -54,11 +54,11 @@ local function generate_xplr_deps_msg()
     coxpcall = { { "error", "coxpcall not installed" } },
     luv = {
       { "error", "luv not installed or built - can't find luv.so" },
-      { "info", ("build libmpack with: cd %s/src/libmpack && make"):format(root) },
+      { "info", ("build libmpack with: cd %s/xplr/src/libmpack && make"):format(root) },
     },
     mpack = {
       { "error", "libmpack not installed or built - can't find mpack.so" },
-      { "info", ("build luv with: cd %s/src/luv && make"):format(root) },
+      { "info", ("build luv with: cd %s/xplr/src/luv && make"):format(root) },
     },
   }
 
@@ -116,7 +116,7 @@ local function check_xplr_health()
     end,
   })
 
-  local stdout = uv.new_pipe()
+  local stdout = uv.new_pipe(false)
 
   local handle, pid = uv.spawn("cat", {
     args = { "/tmp/nvim-xplr-health.fifo" },
@@ -152,7 +152,7 @@ function health.check_health()
     health_warn("msgpack client dependencies not installed")
     health_info("to install:")
     health_info("cd " .. root)
-    health_info([[git submodule update --init --recursive && cd src/luv && make && cd ../libmpack && make]])
+    health_info([[git submodule update --init --recursive && cd xplr/src/luv && make && cd ../libmpack && make]])
     return
   end
 

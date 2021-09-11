@@ -40,7 +40,7 @@ Use `checkhealth xplr` to test:
 - if xplr can find all required msgpack client dependencies
 - checks if nvim can receive msgpack data from xplr 
 
-
+xplr needs version 0.14.6+ 
 
 #### Why the post install function?
 So the installation can be fully automated via package manager.
@@ -49,7 +49,7 @@ It starts jobs which run these commands:
 ```bash
 git submodule update --init --recursive
 cd xplr/src/luv && make 
-cd ../libmpack && make"
+cd ../libmpack && make
 
 ```
 
@@ -73,11 +73,14 @@ require("xplr").setup({
       style = "single",
       highlight = "FloatBorder",
     },
-    position = "30%",
-
+    position = {
+      row = "90%",
+      col = "50%",
+    },
+    relative = "editor",
     size = {
-      width = "40%",
-      height = "60%",
+      width = "80%",
+      height = "30%",
     },
   },
   previewer = {
@@ -251,6 +254,15 @@ nvim:request("nvim_command", "echo v:servername")
 ```
 
 
+#### Debugging xplr
+
+When xplr loads its init files during startup not all its info error messages are printed to the main interface
+
+To [view the output](https://arijitbasu.in/xplr/en/message.html#environment-variables) of the xplr lua environment to view all error messages (like :messages in nvim)
+
+`:!` to invoke the shell
+`cat $XPLR_PIPE_LOGS_OUT`
+
 
 ## TODO
 
@@ -261,7 +273,7 @@ nvim:request("nvim_command", "echo v:servername")
 - improve floating window UI - vertical layout
 - send to qflist & other helpful default actions
 - cwd `open()` opts to support relative file paths
-
+- add xplr version check to checkhealth
 
 
 
